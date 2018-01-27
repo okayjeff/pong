@@ -2,7 +2,14 @@ import sys
 import pygame
 
 pygame.init()
-screen = pygame.display.set_mode((400, 300))
+
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+
+HALF_WINDOW_WIDTH = WINDOW_WIDTH // 2
+HALF_WINDOW_HEIGHT = WINDOW_HEIGHT // 2
+
+CENTER_LINE_THICKNESS = 4
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -10,31 +17,33 @@ WHITE = (255, 255, 255)
 PADDLE_WIDTH = 125
 PADDLE_HEIGHT = 25
 
-FLOOR = screen.get_height()-PADDLE_HEIGHT
+FPS = 60
+FPS_CLOCK = pygame.time.Clock()
+
+DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
-def fill_surface(surface, color):
-    surface.fill(color)
+def draw_arena():
+    DISPLAY_SURF.fill(BLACK)
+    mid_top = (HALF_WINDOW_WIDTH, 0)
+    mid_bottom = (HALF_WINDOW_WIDTH, WINDOW_HEIGHT)
+    pygame.draw.line(
+        DISPLAY_SURF,
+        WHITE,
+        mid_top,
+        mid_bottom,
+        CENTER_LINE_THICKNESS
+    )
 
 
-def draw_paddle(left, top, w, h):
-    rect = pygame.Rect(left, top, w, h)
-    return screen.fill(WHITE, rect)
-
-
-paddle = draw_paddle(200, FLOOR, 125, 25)
-last_pos = (200, 200)
+draw_arena()
 
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            pygame.quit()
             sys.exit()
 
-        screen.fill(BLACK)
-        if event.type == pygame.MOUSEMOTION:
-            last_pos = (event.pos[0], event.pos[1])
-
-    screen.fill(BLACK)
-    draw_paddle(last_pos[0], FLOOR, 125, 25)
-    pygame.display.flip()
+    pygame.display.update()
+    FPS_CLOCK.tick(FPS)
