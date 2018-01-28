@@ -8,7 +8,9 @@ from pong.settings import *
 from pong.utils import (
     delay,
     get_ball_default_pos,
-    get_player_default_pos
+    get_player_default_pos,
+    handle_ball_movement,
+    handle_player_movement
 )
 
 
@@ -39,29 +41,6 @@ def draw_scoreboard(screen, scores, font_size, color, position):
     score_rect = score_surf.get_rect()
     score_rect.centerx, score_rect.y = position
     screen.blit(score_surf, score_rect)
-
-
-def move_ball(ball_rect, dir_x, dir_y):
-    if ball_rect.left < 0 or ball_rect.right > WINDOW_WIDTH:
-        ball_rect.move((-dir_x, dir_y))
-    elif ball_rect.top < 0 or ball_rect.bottom > WINDOW_HEIGHT:
-        ball_rect.move((dir_x, -dir_y))
-    else:
-        ball_rect.move((dir_x, dir_y))
-
-
-def handle_player_movement(player, ball_rect, ball_velocity):
-    step = abs(settings.DEFAULT_SPEED)
-    if ball_velocity[0] <= 0:
-        if player.centery < WINDOW_HEIGHT//2:
-            player.y += step
-        elif player.centery > WINDOW_HEIGHT//2:
-            player.y -= step
-    else:
-        if player.centery > ball_rect.centery:
-            player.y -= step
-        else:
-            player.y += step
 
 
 def check_point_scored(ball_rect):
@@ -101,13 +80,13 @@ def render_game_objects(*objs):
 
 
 player_1 = Player(
-    name='Player 1',
+    name=settings.PLAYER_ONE,
     surf=DISPLAY_SURF,
     pos=get_player_default_pos()
 )
 
 player_2 = Player(
-    name='Player 2',
+    name=settings.PLAYER_TWO,
     surf=DISPLAY_SURF,
     pos=get_player_default_pos(cpu_player=True)
 )
@@ -151,7 +130,7 @@ while True:
         ball.reposition(get_ball_default_pos())
         delay(3)
 
-    move_ball(ball, ball.velocity[0], ball.velocity[1])
+    handle_ball_movement(ball, ball.velocity[0], ball.velocity[1])
     handle_player_movement(player_2, ball, ball.velocity)
 
     draw_arena()
