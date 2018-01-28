@@ -2,6 +2,7 @@ import sys
 import pygame
 
 pygame.init()
+pygame.display.set_caption('Pong')
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -91,9 +92,13 @@ while True:
     if ball.top < LINE_THICKNESS or ball.bottom > WINDOW_HEIGHT-LINE_THICKNESS:
         ball_velocity[1] = -ball_velocity[1]
 
+    if player_one.colliderect(ball) or player_two.colliderect(ball):
+        ball_velocity[0] = -ball_velocity[0]
+
     move_ball(ball, ball_velocity[0], ball_velocity[1])
 
     draw_arena()
+    player_one.y = pygame.mouse.get_pos()[1]
     draw_paddle(player_one)
     draw_paddle(player_two)
     draw_ball(ball)
