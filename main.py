@@ -88,7 +88,7 @@ player_1 = Player(
 player_2 = Player(
     name=settings.PLAYER_TWO,
     surf=DISPLAY_SURF,
-    pos=get_player_default_pos(cpu_player=True)
+    pos=get_player_default_pos(num=settings.PLAYER_TWO)
 )
 
 ball = Ball(

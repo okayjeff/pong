@@ -7,11 +7,12 @@ def delay(seconds):
     pygame.time.delay(seconds*1000)
 
 
-def get_player_default_pos(cpu_player=False):
-    if cpu_player:
-        x = settings.WINDOW_WIDTH - (settings.PADDLE_THICKNESS + settings.PADDLE_OFFSET)
-    else:
+def get_player_default_pos(num=1):
+    if num == 1:
         x = settings.PADDLE_OFFSET
+    else:
+        x = settings.WINDOW_WIDTH - (settings.PADDLE_THICKNESS + settings.PADDLE_OFFSET)
+
     y = (settings.WINDOW_HEIGHT - settings.PADDLE_SIZE) // 2
     return x, y
 
