@@ -27,6 +27,7 @@ def draw_arena():
     DISPLAY_SURF.fill(BLACK)
     mid_top = (HALF_WINDOW_WIDTH, 0)
     mid_bottom = (HALF_WINDOW_WIDTH, WINDOW_HEIGHT)
+    pygame.draw.rect(DISPLAY_SURF, WHITE, ((0, 0), (WINDOW_WIDTH, WINDOW_HEIGHT)), LINE_THICKNESS*2)
     pygame.draw.line(
         DISPLAY_SURF,
         WHITE,
