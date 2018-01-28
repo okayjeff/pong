@@ -1,6 +1,7 @@
 import sys
 import pygame
 
+from pong import settings
 from pong.settings import *
 from pong.utils import delay
 
@@ -10,6 +11,86 @@ pygame.display.set_caption(GAME_NAME)
 
 FPS_CLOCK = pygame.time.Clock()
 DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+
+class Player(object):
+
+    def __init__(self, name, surf, conf, cpu=False):
+        self.name = name
+        self.surf = surf
+        self.conf = conf
+        self.pos = self.get_default_pos(cpu)
+        self.rect = self.get_rect()
+
+    def get_default_pos(self, cpu):
+        if cpu:
+            x = self.conf.WINDOW_WIDTH - (self.conf.PADDLE_THICKNESS+self.conf.PADDLE_OFFSET)
+        else:
+            x = PADDLE_OFFSET
+        y = (self.conf.WINDOW_HEIGHT - self.conf.PADDLE_SIZE) // 2
+        return x, y
+
+    @property
+    def x(self):
+        return self.rect.x
+
+    @x.setter
+    def x(self, value):
+        self.rect.x = value
+
+    @property
+    def y(self):
+        return self.rect.y
+
+    @y.setter
+    def y(self, value):
+        self.rect.y = value
+
+    @property
+    def centerx(self):
+        return self.rect.centerx
+
+    @property
+    def centery(self):
+        return self.rect.centery
+
+    @property
+    def top(self):
+        return self.rect.top
+
+    @property
+    def bottom(self):
+        return self.rect.bottom
+
+    @property
+    def left(self):
+        return self.rect.left
+
+    @property
+    def right(self):
+        return self.rect.right
+
+    def get_rect(self):
+        left, top = self.pos
+        width, height = self.conf.PADDLE_THICKNESS, self.conf.PADDLE_SIZE
+        return pygame.Rect(left, top, width, height)
+
+    def render(self):
+        if self.rect.bottom > self.conf.BOTTOM_EDGE:
+            self.rect.bottom = self.conf.BOTTOM_EDGE
+
+        elif self.rect.top < self.conf.TOP_EDGE:
+            self.rect.top = self.conf.TOP_EDGE
+
+        return pygame.draw.rect(
+            self.surf,
+            self.conf.PADDLE_COLOR,
+            self.rect
+        )
+
+    def move(self, pos):
+        self.x += pos[0]
+        self.y += pos[1]
 
 
 def draw_arena():
@@ -24,19 +105,6 @@ def draw_arena():
         mid_bottom,
         LINE_THICKNESS//4
     )
-
-
-def draw_paddle(paddle_rect):
-    # Stops paddle moving too low
-    if paddle_rect.bottom > WINDOW_HEIGHT - LINE_THICKNESS:
-        paddle_rect.bottom = WINDOW_HEIGHT - LINE_THICKNESS
-
-    # Stops paddle moving too high
-    elif paddle_rect.top < LINE_THICKNESS:
-        paddle_rect.top = LINE_THICKNESS
-
-    # Draws paddle
-    pygame.draw.rect(DISPLAY_SURF, WHITE, paddle_rect)
 
 
 def draw_ball(screen, ball_rect, color):
@@ -65,18 +133,18 @@ def move_ball(ball_rect, dir_x, dir_y):
         ball_rect.move_ip(dir_x, dir_y)
 
 
-def move_player_two(p2, ball_rect, ball_velocity):
-    step = abs(DEFAULT_SPEED)
-    if ball_velocity[0] <= 0:  # If ball is moving away from player 2
-        if p2.centery < WINDOW_HEIGHT//2:
-            p2.y += step
-        elif p2.centery > WINDOW_HEIGHT//2:
-            p2.y -= step
+def handle_player_movement(player, ball_rect, ball_velocity):
+    step = abs(settings.DEFAULT_SPEED)
+    if ball_velocity[0] <= 0:
+        if player.centery < WINDOW_HEIGHT//2:
+            player.y += step
+        elif player.centery > WINDOW_HEIGHT//2:
+            player.y -= step
     else:
-        if p2.centery > ball_rect.centery:
-            p2.y -= step
+        if player.centery > ball_rect.centery:
+            player.y -= step
         else:
-            p2.y += step
+            player.y += step
 
 
 def check_point_scored(ball_rect):
@@ -110,9 +178,8 @@ def celebrate_game_winner(player):
     pass
 
 
-player_one_pos = player_two_pos = (WINDOW_HEIGHT - PADDLE_SIZE) // 2
-player_one = pygame.Rect(PADDLE_OFFSET, player_one_pos, PADDLE_THICKNESS, PADDLE_SIZE)
-player_two = pygame.Rect(WINDOW_WIDTH-(PADDLE_OFFSET+PADDLE_THICKNESS), player_two_pos, PADDLE_THICKNESS, PADDLE_SIZE)
+player_1 = Player('Player 1', DISPLAY_SURF, settings)
+player_2 = Player('Player 2', DISPLAY_SURF, settings, cpu=True)
 
 ball_x = (WINDOW_WIDTH // 2) - (LINE_THICKNESS // 2)
 ball_y = (WINDOW_HEIGHT // 2) - (LINE_THICKNESS // 2)
@@ -124,8 +191,8 @@ scores = [0, 0]
 
 
 draw_arena()
-draw_paddle(player_one)
-draw_paddle(player_two)
+player_1.render()
+player_2.render()
 draw_ball(DISPLAY_SURF, ball, WHITE)
 draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
@@ -137,12 +204,12 @@ while True:
             sys.exit()
 
         elif event.type == pygame.MOUSEMOTION:
-            player_one.y = event.pos[1]
+            player_1.move((0, event.pos[1]-player_1.y))
 
     if ball.top < TOP_EDGE or ball.bottom > BOTTOM_EDGE:
         ball_velocity[1] = -ball_velocity[1]
 
-    if player_one.colliderect(ball) or player_two.colliderect(ball):
+    if player_1.rect.colliderect(ball) or player_2.rect.colliderect(ball):
         ball_velocity[0] = -ball_velocity[0]
 
     scoring_player = check_point_scored(ball)
@@ -156,11 +223,11 @@ while True:
         delay(3)
 
     move_ball(ball, ball_velocity[0], ball_velocity[1])
-    move_player_two(player_two, ball, ball_velocity)
+    handle_player_movement(player_2, ball, ball_velocity)
 
     draw_arena()
-    draw_paddle(player_one)
-    draw_paddle(player_two)
+    player_1.render()
+    player_2.render()
     draw_ball(DISPLAY_SURF, ball, WHITE)
     draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
