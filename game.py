@@ -152,7 +152,6 @@ while True:
             pygame.quit()
             sys.exit()
         celebrate_point_scored(scoring_player, DISPLAY_SURF, SCOREBOARD_FONT_SIZE, WHITE, DEAD_CENTER)
-        pygame.display.update()
         reset_ball(ball)
         delay(3)
 
