@@ -1,48 +1,15 @@
 import sys
 import pygame
 
+from pong.settings import *
+from pong.utils import delay
+
+
 pygame.init()
-pygame.display.set_caption('Pong')
+pygame.display.set_caption(GAME_NAME)
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
-
-HALF_WINDOW_WIDTH = WINDOW_WIDTH // 2
-HALF_WINDOW_HEIGHT = WINDOW_HEIGHT // 2
-
-LINE_THICKNESS = 4
-CENTER_LINE_THICKNESS = LINE_THICKNESS // 2
-ARENA_BORDER_THICKNESS = LINE_THICKNESS * 2
-BALL_THICKNESS = LINE_THICKNESS * 2
-
-LEFT_EDGE = LINE_THICKNESS
-RIGHT_EDGE = WINDOW_WIDTH - LINE_THICKNESS
-TOP_EDGE = LINE_THICKNESS
-BOTTOM_EDGE = WINDOW_HEIGHT - LINE_THICKNESS
-
-MID_TOP = (WINDOW_WIDTH//2, TOP_EDGE)
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
-PADDLE_SIZE = 50
-PADDLE_THICKNESS = LINE_THICKNESS * 2
-PADDLE_OFFSET = 20
-
-WINNING_SCORE = 5
-
-FPS = 60
 FPS_CLOCK = pygame.time.Clock()
-
 DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
-DEFAULT_SPEED = -3
-
-PLAYER_ONE = 1
-PLAYER_TWO = 2
-
-DEFAULT_FONT_SIZE = 14
-SCOREBOARD_FONT_SIZE = DEFAULT_FONT_SIZE + 6
 
 
 def draw_arena():
@@ -72,15 +39,15 @@ def draw_paddle(paddle_rect):
     pygame.draw.rect(DISPLAY_SURF, WHITE, paddle_rect)
 
 
-def draw_ball(ball_rect):
-    pygame.draw.rect(DISPLAY_SURF, WHITE, ball_rect)
+def draw_ball(screen, ball_rect, color):
+    pygame.draw.rect(screen, color, ball_rect)
 
 
-def draw_scoreboard(screen, scores):
-    font = pygame.font.SysFont('Hack', SCOREBOARD_FONT_SIZE)
-    score_surf = font.render('{} {}'.format(scores[0], scores[1]), False, WHITE)
+def draw_scoreboard(screen, scores, font_size, color, position):
+    font = pygame.font.SysFont('Hack', font_size)
+    score_surf = font.render('{} {}'.format(scores[0], scores[1]), False, color)
     score_rect = score_surf.get_rect()
-    score_rect.centerx, score_rect.y = MID_TOP
+    score_rect.centerx, score_rect.y = position
     screen.blit(score_surf, score_rect)
 
 
@@ -128,8 +95,19 @@ def check_for_winner(player, scores, winning_pts):
         return player
 
 
-def delay(seconds):
-    pygame.time.delay(seconds*1000)
+def celebrate_point_scored(player, screen, font_size, text_color, pos, bg_color=None):
+    pname = 'Player One' if player == 1 else 'Player Two'
+    text = '{} scored!'.format(pname)
+
+    font = pygame.font.SysFont('Hack', font_size)
+    celeb_surf = font.render(text, False, text_color, bg_color)
+    celeb_rect = celeb_surf.get_rect()
+    celeb_rect.centerx, celeb_rect.centery = pos
+    screen.blit(celeb_surf, celeb_rect)
+
+
+def celebrate_game_winner(player):
+    pass
 
 
 player_one_pos = player_two_pos = (WINDOW_HEIGHT - PADDLE_SIZE) // 2
@@ -148,8 +126,8 @@ scores = [0, 0]
 draw_arena()
 draw_paddle(player_one)
 draw_paddle(player_two)
-draw_ball(ball)
-draw_scoreboard(DISPLAY_SURF, scores)
+draw_ball(DISPLAY_SURF, ball, WHITE)
+draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
 
 while True:
@@ -170,8 +148,11 @@ while True:
     scoring_player = check_point_scored(ball)
     if scoring_player:
         if check_for_winner(scoring_player, scores, WINNING_SCORE):
+            celebrate_game_winner(scoring_player)
             pygame.quit()
             sys.exit()
+        celebrate_point_scored(scoring_player, DISPLAY_SURF, SCOREBOARD_FONT_SIZE, WHITE, DEAD_CENTER)
+        pygame.display.update()
         reset_ball(ball)
         delay(3)
 
@@ -181,8 +162,8 @@ while True:
     draw_arena()
     draw_paddle(player_one)
     draw_paddle(player_two)
-    draw_ball(ball)
-    draw_scoreboard(DISPLAY_SURF, scores)
+    draw_ball(DISPLAY_SURF, ball, WHITE)
+    draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
     pygame.display.update()
     FPS_CLOCK.tick(FPS)
