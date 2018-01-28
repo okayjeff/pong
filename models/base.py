@@ -1,22 +1,10 @@
-import pygame
+from pong import settings
 
 
-class Player(object):
+class PongObject(object):
 
-    def __init__(self, name, surf, conf, cpu=False):
-        self.name = name
-        self.surf = surf
-        self.conf = conf
-        self.pos = self.get_default_pos(cpu)
+    def __init__(self):
         self.rect = self.get_rect()
-
-    def get_default_pos(self, cpu):
-        if cpu:
-            x = self.conf.WINDOW_WIDTH - (self.conf.PADDLE_THICKNESS + self.conf.PADDLE_OFFSET)
-        else:
-            x = self.conf.PADDLE_OFFSET
-        y = (self.conf.WINDOW_HEIGHT - self.conf.PADDLE_SIZE) // 2
-        return x, y
 
     @property
     def x(self):
@@ -38,9 +26,17 @@ class Player(object):
     def centerx(self):
         return self.rect.centerx
 
+    @centerx.setter
+    def centerx(self, value):
+        self.rect.centerx = value
+
     @property
     def centery(self):
         return self.rect.centery
+
+    @centery.setter
+    def centery(self, value):
+        self.rect.centery = value
 
     @property
     def top(self):
@@ -75,23 +71,14 @@ class Player(object):
         self.rect.right = value
 
     def get_rect(self):
-        left, top = self.pos
-        width, height = self.conf.PADDLE_THICKNESS, self.conf.PADDLE_SIZE
-        return pygame.Rect(left, top, width, height)
+        raise NotImplementedError
 
     def render(self):
-        if self.bottom > self.conf.BOTTOM_EDGE:
-            self.bottom = self.conf.BOTTOM_EDGE
+        raise NotImplementedError
 
-        elif self.top < self.conf.TOP_EDGE:
-            self.top = self.conf.TOP_EDGE
+    def move(self, vector):
+        self.x += vector[0]
+        self.y += vector[1]
 
-        return pygame.draw.rect(
-            self.surf,
-            self.conf.PADDLE_COLOR,
-            self.rect
-        )
-
-    def move(self, pos):
-        self.x += pos[0]
-        self.y += pos[1]
+    def reposition(self, pos):
+        self.centerx, self.centery = pos

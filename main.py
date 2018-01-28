@@ -2,9 +2,14 @@ import sys
 import pygame
 
 from pong import settings
-from pong.player import Player
+from pong.models.ball import Ball
+from pong.models.player import Player
 from pong.settings import *
-from pong.utils import delay
+from pong.utils import (
+    delay,
+    get_ball_default_pos,
+    get_player_default_pos
+)
 
 
 pygame.init()
@@ -28,10 +33,6 @@ def draw_arena():
     )
 
 
-def draw_ball(screen, ball_rect, color):
-    pygame.draw.rect(screen, color, ball_rect)
-
-
 def draw_scoreboard(screen, scores, font_size, color, position):
     font = pygame.font.SysFont('Hack', font_size)
     score_surf = font.render('{} {}'.format(scores[0], scores[1]), False, color)
@@ -40,18 +41,13 @@ def draw_scoreboard(screen, scores, font_size, color, position):
     screen.blit(score_surf, score_rect)
 
 
-def reset_ball(ball_rect):
-    ball_rect.centerx = WINDOW_WIDTH // 2
-    ball_rect.centery = WINDOW_HEIGHT // 2
-
-
 def move_ball(ball_rect, dir_x, dir_y):
     if ball_rect.left < 0 or ball_rect.right > WINDOW_WIDTH:
-        ball_rect.move_ip(-dir_x, dir_y)
+        ball_rect.move((-dir_x, dir_y))
     elif ball_rect.top < 0 or ball_rect.bottom > WINDOW_HEIGHT:
-        ball_rect.move_ip(dir_x, -dir_y)
+        ball_rect.move((dir_x, -dir_y))
     else:
-        ball_rect.move_ip(dir_x, dir_y)
+        ball_rect.move((dir_x, dir_y))
 
 
 def handle_player_movement(player, ball_rect, ball_velocity):
@@ -99,22 +95,34 @@ def celebrate_game_winner(player):
     pass
 
 
-player_1 = Player('Player 1', DISPLAY_SURF, settings)
-player_2 = Player('Player 2', DISPLAY_SURF, settings, cpu=True)
+def render_game_objects(*objs):
+    for obj in objs:
+        obj.render()
 
-ball_x = (WINDOW_WIDTH // 2) - (LINE_THICKNESS // 2)
-ball_y = (WINDOW_HEIGHT // 2) - (LINE_THICKNESS // 2)
-ball = pygame.Rect(ball_x, ball_y, BALL_THICKNESS, BALL_THICKNESS)
 
-ball_velocity = [DEFAULT_SPEED, DEFAULT_SPEED]
+player_1 = Player(
+    name='Player 1',
+    surf=DISPLAY_SURF,
+    pos=get_player_default_pos()
+)
+
+player_2 = Player(
+    name='Player 2',
+    surf=DISPLAY_SURF,
+    pos=get_player_default_pos(cpu_player=True)
+)
+
+ball = Ball(
+    surf=DISPLAY_SURF,
+    pos=get_ball_default_pos(),
+    velocity=[settings.DEFAULT_SPEED, settings.DEFAULT_SPEED]
+)
 
 scores = [0, 0]
 
 
 draw_arena()
-player_1.render()
-player_2.render()
-draw_ball(DISPLAY_SURF, ball, WHITE)
+render_game_objects(player_1, player_2, ball)
 draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
 
@@ -128,10 +136,10 @@ while True:
             player_1.move((0, event.pos[1]-player_1.y))
 
     if ball.top < TOP_EDGE or ball.bottom > BOTTOM_EDGE:
-        ball_velocity[1] = -ball_velocity[1]
+        ball.velocity[1] = -ball.velocity[1]
 
     if player_1.rect.colliderect(ball) or player_2.rect.colliderect(ball):
-        ball_velocity[0] = -ball_velocity[0]
+        ball.velocity[0] = -ball.velocity[0]
 
     scoring_player = check_point_scored(ball)
     if scoring_player:
@@ -140,16 +148,14 @@ while True:
             pygame.quit()
             sys.exit()
         celebrate_point_scored(scoring_player, DISPLAY_SURF, SCOREBOARD_FONT_SIZE, WHITE, DEAD_CENTER)
-        reset_ball(ball)
+        ball.reposition(get_ball_default_pos())
         delay(3)
 
-    move_ball(ball, ball_velocity[0], ball_velocity[1])
-    handle_player_movement(player_2, ball, ball_velocity)
+    move_ball(ball, ball.velocity[0], ball.velocity[1])
+    handle_player_movement(player_2, ball, ball.velocity)
 
     draw_arena()
-    player_1.render()
-    player_2.render()
-    draw_ball(DISPLAY_SURF, ball, WHITE)
+    render_game_objects(player_1, player_2, ball)
     draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
 
     pygame.display.update()
