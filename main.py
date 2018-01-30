@@ -10,7 +10,8 @@ from pong.utils import (
     get_ball_default_pos,
     get_player_default_pos,
     handle_ball_movement,
-    handle_player_movement
+    handle_player_movement,
+    render_game_objects
 )
 
 
@@ -74,11 +75,6 @@ def celebrate_point_scored(player, screen, font_size, text_color, pos, bg_color=
 
 def celebrate_game_winner(player):
     pass
-
-
-def render_game_objects(*objs):
-    for obj in objs:
-        obj.render()
 
 
 def main():
