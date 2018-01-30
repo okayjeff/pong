@@ -67,6 +67,7 @@ def main():
 
     # Main loop
     while True:
+        # Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -75,6 +76,7 @@ def main():
             elif event.type == pygame.MOUSEMOTION:
                 player_1.move((0, event.pos[1]-player_1.y))
 
+        # Logic
         if ball.hits_top_edge() or ball.hits_bottom_edge():
             ball.velocity[1] = -ball.velocity[1]
 
@@ -93,8 +95,8 @@ def main():
         handle_ball_movement(ball, ball.velocity[0], ball.velocity[1])
         handle_player_movement(player_2, ball, ball.velocity)
 
+        # Rendering
         render_game_objects(arena, scoreboard, player_1, player_2, ball)
-
         pygame.display.update()
         FPS_CLOCK.tick(settings.FPS)
 
