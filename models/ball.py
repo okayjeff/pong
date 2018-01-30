@@ -20,3 +20,9 @@ class Ball(PongObject):
 
     def render(self):
         pygame.draw.rect(self.surf, self.color, self.rect)
+
+    def hits_top_edge(self):
+        return self.top < settings.TOP_EDGE
+
+    def hits_bottom_edge(self):
+        return self.bottom > settings.BOTTOM_EDGE

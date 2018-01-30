@@ -2,10 +2,14 @@ import sys
 import pygame
 
 from pong import settings
+from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.player import Player
+from pong.models.scoreboard import Scoreboard
 from pong.settings import *
 from pong.utils import (
+    check_for_winner,
+    check_point_scored,
     delay,
     get_ball_default_pos,
     get_player_default_pos,
@@ -16,50 +20,12 @@ from pong.utils import (
 
 
 FPS_CLOCK = pygame.time.Clock()
-DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+DISPLAY_SURF = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
 
 
 def init():
     pygame.init()
-    pygame.display.set_caption(GAME_NAME)
-
-
-def draw_arena():
-    DISPLAY_SURF.fill(BLACK)
-    mid_top = (HALF_WINDOW_WIDTH, 0)
-    mid_bottom = (HALF_WINDOW_WIDTH, WINDOW_HEIGHT)
-    pygame.draw.rect(DISPLAY_SURF, WHITE, ((0, 0), (WINDOW_WIDTH, WINDOW_HEIGHT)), ARENA_BORDER_THICKNESS)
-    pygame.draw.line(
-        DISPLAY_SURF,
-        WHITE,
-        mid_top,
-        mid_bottom,
-        LINE_THICKNESS//4
-    )
-
-
-def draw_scoreboard(screen, scores, font_size, color, position):
-    font = pygame.font.SysFont('Hack', font_size)
-    p1_score = scores[settings.PLAYER_ONE]
-    p2_score = scores[settings.PLAYER_TWO]
-    score_surf = font.render('{} {}'.format(p1_score, p2_score), False, color)
-    score_rect = score_surf.get_rect()
-    score_rect.centerx, score_rect.y = position
-    screen.blit(score_surf, score_rect)
-
-
-def check_point_scored(ball_rect, scores):
-    if ball_rect.left <= LEFT_EDGE:
-        return PLAYER_TWO
-    elif ball_rect.right >= RIGHT_EDGE:
-        return PLAYER_ONE
-
-
-def check_for_winner(player, scores, winning_pts):
-    player_score_idx = player - 1
-    player_pts = scores[player_score_idx]
-    if player_pts >= winning_pts:
-        return player
+    pygame.display.set_caption(settings.GAME_NAME)
 
 
 def celebrate_point_scored(player, screen, font_size, text_color, pos, bg_color=None):
@@ -80,10 +46,12 @@ def celebrate_game_winner(player):
 def main():
     init()
 
+    arena = Arena(surf=DISPLAY_SURF)
+
     player_1 = Player(
         name=settings.PLAYER_ONE,
         surf=DISPLAY_SURF,
-        pos=get_player_default_pos()
+        pos=get_player_default_pos(num=settings.PLAYER_ONE)
     )
 
     player_2 = Player(
@@ -103,9 +71,13 @@ def main():
         settings.PLAYER_TWO: 0
     }
 
-    draw_arena()
-    render_game_objects(player_1, player_2, ball)
-    draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
+    scoreboard = Scoreboard(
+        surf=DISPLAY_SURF,
+        pos=settings.MID_TOP,
+        scores=scores
+    )
+
+    render_game_objects(arena, scoreboard, player_1, player_2, ball)
 
     while True:
         for event in pygame.event.get():
@@ -116,15 +88,15 @@ def main():
             elif event.type == pygame.MOUSEMOTION:
                 player_1.move((0, event.pos[1]-player_1.y))
 
-        if ball.top < TOP_EDGE or ball.bottom > BOTTOM_EDGE:
+        if ball.hits_top_edge() or ball.hits_bottom_edge():
             ball.velocity[1] = -ball.velocity[1]
 
-        if player_1.rect.colliderect(ball) or player_2.rect.colliderect(ball):
+        if player_1.hits_ball(ball) or player_2.hits_ball(ball):
             ball.velocity[0] = -ball.velocity[0]
 
-        scoring_player = check_point_scored(ball, scores)
+        scoring_player = check_point_scored(ball)
         if scoring_player:
-            scores[scoring_player] += 1
+            scoreboard.scores[scoring_player] += 1
             if check_for_winner(scoring_player, scores, WINNING_SCORE):
                 celebrate_game_winner(scoring_player)
                 pygame.quit()
@@ -136,9 +108,7 @@ def main():
         handle_ball_movement(ball, ball.velocity[0], ball.velocity[1])
         handle_player_movement(player_2, ball, ball.velocity)
 
-        draw_arena()
-        render_game_objects(player_1, player_2, ball)
-        draw_scoreboard(DISPLAY_SURF, scores, SCOREBOARD_FONT_SIZE, WHITE, MID_TOP)
+        render_game_objects(arena, scoreboard, player_1, player_2, ball)
 
         pygame.display.update()
         FPS_CLOCK.tick(FPS)

@@ -30,3 +30,6 @@ class Player(PongObject):
             self.color,
             self.rect
         )
+
+    def hits_ball(self, ball):
+        return self.rect.colliderect(ball)
