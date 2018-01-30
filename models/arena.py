@@ -14,7 +14,7 @@ class Arena(PongObject):
         super(Arena, self).__init__()
 
     def get_rect(self):
-        pass
+        return self.surf.get_rect()
 
     def draw_border(self):
         pygame.draw.rect(
