@@ -2,6 +2,7 @@ import sys
 import pygame
 
 from pong import settings
+from pong.models.announcement import Announcement
 from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.player import Player
@@ -63,7 +64,16 @@ def main():
         scores=scores
     )
 
-    render_game_objects(arena, scoreboard, player_1, player_2, ball)
+    # Stack used to maintain render order
+    game_objects = [
+        arena,
+        scoreboard,
+        player_1,
+        player_2,
+        ball
+    ]
+
+    celebrating = False  # Are we celebrating a point?
 
     # Main loop
     while True:
@@ -77,6 +87,14 @@ def main():
                 player_1.move((0, event.pos[1]-player_1.y))
 
         # Logic
+
+        # If we're celebrating, then the Announcement object must be
+        # on top of the stack.
+        if celebrating:
+            delay(2)
+            game_objects.pop()
+            celebrating = False
+
         if ball.hits_top_edge() or ball.hits_bottom_edge():
             ball.velocity[1] = -ball.velocity[1]
 
@@ -89,14 +107,18 @@ def main():
             if check_for_winner(scoring_player, scores, settings.WINNING_SCORE):
                 pygame.quit()
                 sys.exit()
+
+            celebrating = True
+            announcement = Announcement(DISPLAY_SURF, 'Player {} scores!'.format(scoring_player))
+            game_objects.append(announcement)
+
             ball.reposition(get_ball_default_pos())
-            delay(3)
 
         handle_ball_movement(ball, ball.velocity[0], ball.velocity[1])
         handle_player_movement(player_2, ball, ball.velocity)
 
         # Rendering
-        render_game_objects(arena, scoreboard, player_1, player_2, ball)
+        render_game_objects(game_objects)
         pygame.display.update()
         FPS_CLOCK.tick(settings.FPS)
 

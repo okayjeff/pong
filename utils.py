@@ -60,6 +60,6 @@ def handle_player_movement(player, ball_rect, ball_velocity):
             player.y += step
 
 
-def render_game_objects(*objs):
+def render_game_objects(objs):
     for obj in objs:
         obj.render()
