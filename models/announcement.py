@@ -26,6 +26,6 @@ class Announcement(PongObject):
     def render(self):
         surf = self.font.render(self.text, False, self.color)
         text_rect = surf.get_rect()
-        text_rect.center = settings.DEAD_CENTER
+        text_rect.center = self.pos
         pygame.draw.rect(self.surf, self.bg_color, self.rect)
         self.surf.blit(surf, text_rect)
