@@ -89,7 +89,7 @@ def main():
         # Logic
 
         # If we're celebrating, then the Announcement object must be
-        # on top of the stack.
+        # on top of the stack. Let's pause, pop it off and reset status.
         if celebrating:
             delay(2)
             game_objects.pop()
