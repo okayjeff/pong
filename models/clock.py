@@ -28,9 +28,7 @@ class Clock(PongObject):
         return time.strftime(fmt, time.gmtime(seconds))
 
     def get_elapsed_seconds(self, now):
-        elapsed = 0
-        if self.started:
-            elapsed = (now-self.start_time)//1000
+        elapsed = (now - self.start_time) // 1000
         return elapsed
 
     def reset(self):

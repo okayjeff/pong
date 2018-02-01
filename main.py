@@ -15,7 +15,8 @@ from pong.utils import (
     get_player_default_pos,
     handle_ball_movement,
     handle_player_movement,
-    render_game_objects
+    render_game_objects,
+    save_records_to_file
 )
 
 
@@ -44,7 +45,8 @@ def show_title_screen():
         FPS_CLOCK.tick(15)
 
 
-def show_game_over_screen():
+def show_game_over_screen(seconds):
+    save_records_to_file(seconds)
     game_over_screen = ModalScreen(
         surf=DISPLAY_SURF,
         title_text='Game Over',
@@ -132,7 +134,9 @@ def main():
         game_over = check_point_scored(ball)
         if game_over:
             clock.stop()
-            show_game_over_screen()
+            now = pygame.time.get_ticks()
+            elapsed = clock.get_elapsed_seconds(now)
+            show_game_over_screen(elapsed)
             clock.reset()
             clock.start()
 

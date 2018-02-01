@@ -1,8 +1,11 @@
 import sys
+import time
 
 import pygame
 
 from pong import settings
+
+TIME_FORMAT = '%H:%M:%S'
 
 
 def pygame_init():
@@ -92,19 +95,48 @@ def get_records(fname=settings.RECORDS_FILENAME):
     """
     Open records file and return list of records.
     """
-    pass
+    with open(fname, 'r+') as f:
+        records = f.readlines()
+    records = [r.split() for r in records]
+    return records
 
 
-def save_record_to_file(seconds, fname=settings.RECORDS_FILENAME):
+def save_records_to_file(seconds, fname=settings.RECORDS_FILENAME):
     """
     Add given time in seconds to the records file.
     """
-    pass
+    records = get_records()
+    record_time, idx = recent_time_is_record(seconds, records)
+    if len(records) == 0:
+        records = update_records(0, seconds, records)
+
+    elif record_time:
+        records = update_records(idx, seconds, records)
+
+    with open(fname, 'w+') as f:
+        for record in records:
+            f.write('{} {}\n'.format(record[0], record[1]))
 
 
-def recent_time_is_record(seconds):
+def recent_time_is_record(seconds, records):
     """
-    Determine if the given time in seconds is in the top 5
+    Return True if the given time in seconds is in the top 5
     saved on file.
     """
-    pass
+    for idx, record in enumerate(records):
+        if int(seconds) > int(record[1]):
+            return True, idx
+    return False, None
+
+
+def update_records(idx, seconds, records):
+    records.insert(idx, ['JG', seconds])
+    if len(records) > 5:
+        records.pop()
+    return records
+
+
+def format_time(seconds):
+    fmt = '%H:%M:%S'
+    return time.strftime(fmt, time.gmtime(seconds))
+
