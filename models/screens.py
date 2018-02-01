@@ -6,7 +6,7 @@ from pong.models.base import PongObject
 
 class ModalScreen(PongObject):
 
-    def __init__(self, surf, title_text, subtitle_text, records, font=None, color=None):
+    def __init__(self, surf, title_text, subtitle_text, records=None, font=None, color=None):
         self.surf = surf
         self.title_text = title_text
         self.subtitle_text = subtitle_text
