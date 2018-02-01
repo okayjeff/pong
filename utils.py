@@ -54,6 +54,18 @@ def handle_ball_movement(ball, player_1, player_2):
     if player_1.hits_ball(ball) or player_2.hits_ball(ball):
         ball.velocity[0] = -ball.velocity[0]
 
+        # Every time player 1 hits ball increase speed
+        if player_1.hits_ball(ball):
+            if ball.velocity[0] < 0:
+                ball.velocity[0] -= 1
+            else:
+                ball.velocity[0] += 1
+
+            if ball.velocity[1] < 0:
+                ball.velocity[1] -= 1
+            else:
+                ball.velocity[1] += 1
+
     ball.move(ball.velocity)
 
 

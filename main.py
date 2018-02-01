@@ -85,7 +85,7 @@ def show_point_scored_message(player):
 
 
 def main():
-    difficulty = settings.HARD
+    difficulty = settings.EASY
     arena = Arena(surf=DISPLAY_SURF)
 
     player_1 = Player(
