@@ -58,7 +58,7 @@ def handle_ball_movement(ball, player_1, player_2):
 
 
 def handle_player_movement(player, ball_rect, ball_velocity):
-    step = abs(settings.DEFAULT_SPEED)
+    step = abs(ball_velocity[0])
     if ball_velocity[0] <= 0:
         if player.centery < settings.WINDOW_HEIGHT//2:
             player.y += step
