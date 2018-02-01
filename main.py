@@ -85,6 +85,7 @@ def show_point_scored_message(player):
 
 
 def main():
+    difficulty = settings.HARD
     arena = Arena(surf=DISPLAY_SURF)
 
     player_1 = Player(
@@ -102,7 +103,7 @@ def main():
     ball = Ball(
         surf=DISPLAY_SURF,
         pos=get_ball_default_pos(),
-        velocity=[settings.DEFAULT_SPEED, settings.DEFAULT_SPEED]
+        velocity=[difficulty, difficulty]
     )
 
     clock = Clock(surf=DISPLAY_SURF)

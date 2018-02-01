@@ -48,9 +48,7 @@ def get_player_default_pos(num=1):
 
 
 def handle_ball_movement(ball_rect, dir_x, dir_y):
-    if ball_rect.left < 0 or ball_rect.right > settings.WINDOW_WIDTH:
-        ball_rect.move((-dir_x, dir_y))
-    elif ball_rect.top < 0 or ball_rect.bottom > settings.WINDOW_HEIGHT:
+    if ball_rect.top <= settings.TOP_EDGE or ball_rect.bottom >= settings.BOTTOM_EDGE:
         ball_rect.move((dir_x, -dir_y))
     else:
         ball_rect.move((dir_x, dir_y))
