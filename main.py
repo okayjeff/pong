@@ -1,4 +1,3 @@
-import sys
 import pygame
 
 from pong import settings
@@ -7,12 +6,13 @@ from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.player import Player
 from pong.models.scoreboard import Scoreboard
-from pong.models.screens import TitleScreen
+from pong.models.screens import ModalScreen
 from pong.utils import (
     pygame_init,
     check_for_winner,
     check_point_scored,
     delay,
+    exit,
     get_ball_default_pos,
     get_player_default_pos,
     handle_ball_movement,
@@ -25,7 +25,7 @@ DISPLAY_SURF, FPS_CLOCK = pygame_init()
 
 
 def show_title_screen():
-    title_screen = TitleScreen(
+    title_screen = ModalScreen(
         surf=DISPLAY_SURF,
         title_text=settings.GAME_NAME,
         subtitle_text='Press the SPACE bar to start playing.'
@@ -35,8 +35,7 @@ def show_title_screen():
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -45,6 +44,46 @@ def show_title_screen():
         title_screen.render()
         pygame.display.update()
         FPS_CLOCK.tick(15)
+
+
+def show_game_over_screen(player):
+    game_over_screen = ModalScreen(
+        surf=DISPLAY_SURF,
+        title_text='Player {} wins!'.format(player),
+        subtitle_text='Press the SPACE bar to play again.'
+    )
+
+    game_over = True
+    while game_over:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    game_over = False
+
+        game_over_screen.render()
+        pygame.display.update()
+        FPS_CLOCK.tick(15)
+
+
+def show_point_scored_message(player):
+    announcement = Announcement(DISPLAY_SURF, 'Player {} scores!'.format(player))
+    show = True
+    while show:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_SPACE:
+            #         show = False
+
+        announcement.render()
+        pygame.display.update()
+        show = False
+    FPS_CLOCK.tick(.5)
 
 
 def main():
@@ -87,27 +126,17 @@ def main():
         ball
     ]
 
-    celebrating = False  # Are we celebrating a point?
-
     # Main loop
     while True:
         # Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                exit()
 
             elif event.type == pygame.MOUSEMOTION:
                 player_1.move((0, event.pos[1]-player_1.y))
 
         # Logic
-
-        # If we're celebrating, then the Announcement object must be
-        # on top of the stack. Let's pause, pop it off and reset status.
-        if celebrating:
-            delay(2)
-            game_objects.pop()
-            celebrating = False
 
         if ball.hits_top_edge() or ball.hits_bottom_edge():
             ball.velocity[1] = -ball.velocity[1]
@@ -118,13 +147,10 @@ def main():
         scoring_player = check_point_scored(ball)
         if scoring_player:
             scoreboard.scores[scoring_player] += 1
-            if check_for_winner(scoring_player, scores, settings.WINNING_SCORE):
-                pygame.quit()
-                sys.exit()
+            show_point_scored_message(scoring_player)
 
-            celebrating = True
-            announcement = Announcement(DISPLAY_SURF, 'Player {} scores!'.format(scoring_player))
-            game_objects.append(announcement)
+            if check_for_winner(scoring_player, scores):
+                show_game_over_screen(scoring_player)
 
             ball.reposition(get_ball_default_pos())
 

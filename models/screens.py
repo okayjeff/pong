@@ -4,7 +4,7 @@ from pong import settings
 from pong.models.base import PongObject
 
 
-class TitleScreen(PongObject):
+class ModalScreen(PongObject):
 
     def __init__(self, surf, title_text, subtitle_text, font=None, color=None):
         self.surf = surf
@@ -31,7 +31,7 @@ class TitleScreen(PongObject):
             settings.ANTIALIAS,
             self.color
         )
-        super(TitleScreen, self).__init__()
+        super(ModalScreen, self).__init__()
 
     def get_rect(self):
         pass
@@ -63,7 +63,3 @@ class TitleScreen(PongObject):
             self.subtitle_surf,
             self.get_subtitle_rect()
         )
-
-
-class GameOverScreen(PongObject):
-    pass
