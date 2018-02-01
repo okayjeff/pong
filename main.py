@@ -12,7 +12,7 @@ from pong.utils import (
     check_for_winner,
     check_point_scored,
     delay,
-    exit,
+    exit_game,
     get_ball_default_pos,
     get_player_default_pos,
     handle_ball_movement,
@@ -35,7 +35,7 @@ def show_title_screen():
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()
+                exit_game()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -57,7 +57,7 @@ def show_game_over_screen(player):
     while game_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()
+                exit_game()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -75,7 +75,7 @@ def show_point_scored_message(player):
     while show:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()
+                exit_game()
 
         now = pygame.time.get_ticks()
         if now-start > 2000:
@@ -131,7 +131,7 @@ def main():
         # Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()
+                exit_game()
 
             elif event.type == pygame.MOUSEMOTION:
                 player_1.move((0, event.pos[1]-player_1.y))

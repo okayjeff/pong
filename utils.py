@@ -32,7 +32,7 @@ def delay(seconds):
     pygame.time.delay(seconds*1000)
 
 
-def exit():
+def exit_game():
     pygame.quit()
     sys.exit()
 
