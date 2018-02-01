@@ -135,8 +135,8 @@ def main():
         if player_1.hits_ball(ball) or player_2.hits_ball(ball):
             ball.velocity[0] = -ball.velocity[0]
 
-        scoring_player = check_point_scored(ball)
-        if scoring_player:
+        game_over = check_point_scored(ball)
+        if game_over:
             clock.stop()
             show_game_over_screen()
             clock.reset()
