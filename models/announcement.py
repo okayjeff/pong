@@ -6,7 +6,7 @@ from pong.models.base import PongObject
 
 class Announcement(PongObject):
 
-    def __init__(self, surf, text, font='Courier', color=None, bg_color=None):
+    def __init__(self, surf, text, font=settings.DEFAULT_FONT, color=None, bg_color=None):
         self.surf = surf
         self.text = text
         self.color = color or settings.BLACK
@@ -24,7 +24,7 @@ class Announcement(PongObject):
         return rect
 
     def render(self):
-        surf = self.font.render(self.text, False, self.color)
+        surf = self.font.render(self.text, settings.ANTIALIAS, self.color)
         text_rect = surf.get_rect()
         text_rect.center = self.pos
         pygame.draw.rect(self.surf, self.bg_color, self.rect)

@@ -7,7 +7,9 @@ from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.player import Player
 from pong.models.scoreboard import Scoreboard
+from pong.models.screens import TitleScreen
 from pong.utils import (
+    pygame_init,
     check_for_winner,
     check_point_scored,
     delay,
@@ -19,20 +21,33 @@ from pong.utils import (
 )
 
 
-FPS_CLOCK = pygame.time.Clock()
-DISPLAY_SURF = pygame.display.set_mode(
-    (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
-)
+DISPLAY_SURF, FPS_CLOCK = pygame_init()
 
 
-def init():
-    pygame.init()
-    pygame.display.set_caption(settings.GAME_NAME)
+def show_title_screen():
+    title_screen = TitleScreen(
+        surf=DISPLAY_SURF,
+        title_text=settings.GAME_NAME,
+        subtitle_text='Press the SPACE bar to start playing.'
+    )
+
+    intro = True
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    intro = False
+
+        title_screen.render()
+        pygame.display.update()
+        FPS_CLOCK.tick(15)
 
 
 def main():
-    init()
-
     arena = Arena(surf=DISPLAY_SURF)
 
     player_1 = Player(
@@ -60,7 +75,6 @@ def main():
 
     scoreboard = Scoreboard(
         surf=DISPLAY_SURF,
-        pos=settings.MID_TOP,
         scores=scores
     )
 
@@ -124,4 +138,5 @@ def main():
 
 
 if __name__ == '__main__':
+    show_title_screen()
     main()

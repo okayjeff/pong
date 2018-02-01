@@ -3,6 +3,16 @@ import pygame
 from pong import settings
 
 
+def pygame_init():
+    pygame.init()
+    pygame.display.set_caption(settings.GAME_NAME)
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode(
+        (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
+    )
+    return screen, clock
+
+
 def check_for_winner(player, scores, winning_pts):
     player_score_idx = player - 1
     player_pts = scores[player_score_idx]
