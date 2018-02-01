@@ -5,8 +5,6 @@ import pygame
 
 from pong import settings
 
-TIME_FORMAT = '%H:%M:%S'
-
 
 def pygame_init():
     pygame.init()
@@ -137,6 +135,5 @@ def update_records(idx, seconds, records):
 
 
 def format_time(seconds):
-    fmt = '%H:%M:%S'
+    fmt = settings.TIME_FORMAT
     return time.strftime(fmt, time.gmtime(seconds))
-

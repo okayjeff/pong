@@ -13,7 +13,7 @@ class Clock(PongObject):
         self.start_time = pygame.time.get_ticks()
         self.color = settings.WHITE
         self.font = self.get_font(settings.DEFAULT_FONT)
-        self.font_surf = self.font.render('00:00:00', settings.ANTIALIAS, self.color, settings.BLACK)
+        self.font_surf = self.font.render('00:00', settings.ANTIALIAS, self.color, settings.BLACK)
         self.started = False
         super(Clock, self).__init__()
 
@@ -24,7 +24,7 @@ class Clock(PongObject):
         return self.font_surf.get_rect()
 
     def format_time(self, seconds):
-        fmt = '%H:%M:%S'
+        fmt = settings.TIME_FORMAT
         return time.strftime(fmt, time.gmtime(seconds))
 
     def get_elapsed_seconds(self, now):
