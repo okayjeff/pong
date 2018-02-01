@@ -6,10 +6,11 @@ from pong.models.base import PongObject
 
 class ModalScreen(PongObject):
 
-    def __init__(self, surf, title_text, subtitle_text, font=None, color=None):
+    def __init__(self, surf, title_text, subtitle_text, records, font=None, color=None):
         self.surf = surf
         self.title_text = title_text
         self.subtitle_text = subtitle_text
+        self.records = records
         self.font = font or settings.DEFAULT_FONT
         self.color = color or settings.WHITE
         self.title_font = pygame.font.SysFont(

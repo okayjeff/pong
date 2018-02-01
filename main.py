@@ -17,7 +17,8 @@ from pong.utils import (
     handle_player_movement,
     render_game_objects,
     save_records_to_file,
-    format_time
+    format_time,
+    get_formatted_records
 )
 
 
@@ -51,7 +52,8 @@ def show_game_over_screen(seconds):
     game_over_screen = ModalScreen(
         surf=DISPLAY_SURF,
         title_text=format_time(seconds),
-        subtitle_text='Press the SPACE bar to play again.'
+        subtitle_text='Press the SPACE bar to play again.',
+        records=get_formatted_records()
     )
 
     game_over = True
