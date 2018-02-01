@@ -1,7 +1,6 @@
 import pygame
 
 from pong import settings
-from pong.models.announcement import Announcement
 from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.clock import Clock
