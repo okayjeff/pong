@@ -11,7 +11,6 @@ from pong.utils import (
     pygame_init,
     check_for_winner,
     check_point_scored,
-    delay,
     exit_game,
     get_ball_default_pos,
     get_player_default_pos,
