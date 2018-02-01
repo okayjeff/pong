@@ -5,7 +5,7 @@ from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.clock import Clock
 from pong.models.player import Player
-from pong.models.screens import ModalScreen
+from pong.models.screens import show_title_screen, show_game_over_screen
 from pong.utils import (
     pygame_init,
     check_point_scored,
@@ -15,59 +15,10 @@ from pong.utils import (
     handle_ball_movement,
     handle_player_movement,
     render_game_objects,
-    save_records_to_file,
-    format_time,
-    get_formatted_records
 )
 
 
 DISPLAY_SURF, FPS_CLOCK = pygame_init()
-
-
-def show_title_screen():
-    title_screen = ModalScreen(
-        surf=DISPLAY_SURF,
-        title_text=settings.GAME_NAME,
-        subtitle_text='Press the SPACE bar to start playing.'
-    )
-
-    intro = True
-    while intro:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit_game()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    intro = False
-
-        title_screen.render()
-        pygame.display.update()
-        FPS_CLOCK.tick(15)
-
-
-def show_game_over_screen(seconds):
-    save_records_to_file(seconds)
-    game_over_screen = ModalScreen(
-        surf=DISPLAY_SURF,
-        title_text=format_time(seconds),
-        subtitle_text='Press the SPACE bar to play again.',
-        records=get_formatted_records()
-    )
-
-    game_over = True
-    while game_over:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit_game()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    game_over = False
-
-        game_over_screen.render()
-        pygame.display.update()
-        FPS_CLOCK.tick(15)
 
 
 def main():
@@ -119,7 +70,7 @@ def main():
         if game_over:
             clock.stop()
             elapsed = clock.get_elapsed_seconds()
-            show_game_over_screen(elapsed)
+            show_game_over_screen(DISPLAY_SURF, FPS_CLOCK, elapsed)
             clock.reset()
             clock.start()
 
@@ -136,5 +87,5 @@ def main():
 
 
 if __name__ == '__main__':
-    show_title_screen()
+    show_title_screen(DISPLAY_SURF, FPS_CLOCK)
     main()

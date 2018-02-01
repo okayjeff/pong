@@ -2,6 +2,12 @@ import pygame
 
 from pong import settings
 from pong.models.base import PongObject
+from pong.utils import (
+    exit_game,
+    format_time,
+    get_formatted_records,
+    save_records_to_file
+)
 
 
 class ModalScreen(PongObject):
@@ -64,3 +70,49 @@ class ModalScreen(PongObject):
             self.subtitle_surf,
             self.get_subtitle_rect()
         )
+
+
+def show_title_screen(screen, clock):
+    title_screen = ModalScreen(
+        surf=screen,
+        title_text=settings.GAME_NAME,
+        subtitle_text='Press the SPACE bar to start playing.'
+    )
+
+    intro = True
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit_game()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    intro = False
+
+        title_screen.render()
+        pygame.display.update()
+        clock.tick(15)
+
+
+def show_game_over_screen(screen, clock, seconds):
+    save_records_to_file(seconds)
+    game_over_screen = ModalScreen(
+        surf=screen,
+        title_text=format_time(seconds),
+        subtitle_text='Press the SPACE bar to play again.',
+        records=get_formatted_records()
+    )
+
+    game_over = True
+    while game_over:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit_game()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    game_over = False
+
+        game_over_screen.render()
+        pygame.display.update()
+        clock.tick(15)
