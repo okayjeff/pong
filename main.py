@@ -129,13 +129,6 @@ def main():
                 player_1.move((0, event.pos[1]-player_1.y))
 
         # Logic
-
-        if ball.hits_top_edge() or ball.hits_bottom_edge():
-            ball.velocity[1] = -ball.velocity[1]
-
-        if player_1.hits_ball(ball) or player_2.hits_ball(ball):
-            ball.velocity[0] = -ball.velocity[0]
-
         game_over = check_point_scored(ball)
         if game_over:
             clock.stop()
@@ -145,7 +138,7 @@ def main():
 
             ball.reposition(get_ball_default_pos())
 
-        handle_ball_movement(ball, ball.velocity[0], ball.velocity[1])
+        handle_ball_movement(ball, player_1, player_2)
         handle_player_movement(player_2, ball, ball.velocity)
 
         # Rendering

@@ -47,11 +47,14 @@ def get_player_default_pos(num=1):
     return x, y
 
 
-def handle_ball_movement(ball_rect, dir_x, dir_y):
-    if ball_rect.top <= settings.TOP_EDGE or ball_rect.bottom >= settings.BOTTOM_EDGE:
-        ball_rect.move((dir_x, -dir_y))
-    else:
-        ball_rect.move((dir_x, dir_y))
+def handle_ball_movement(ball, player_1, player_2):
+    if ball.hits_top_edge() or ball.hits_bottom_edge():
+        ball.velocity[1] = -ball.velocity[1]
+
+    if player_1.hits_ball(ball) or player_2.hits_ball(ball):
+        ball.velocity[0] = -ball.velocity[0]
+
+    ball.move(ball.velocity)
 
 
 def handle_player_movement(player, ball_rect, ball_velocity):
