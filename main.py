@@ -4,12 +4,11 @@ from pong import settings
 from pong.models.announcement import Announcement
 from pong.models.arena import Arena
 from pong.models.ball import Ball
+from pong.models.clock import Clock
 from pong.models.player import Player
-from pong.models.scoreboard import Scoreboard
 from pong.models.screens import ModalScreen
 from pong.utils import (
     pygame_init,
-    check_for_winner,
     check_point_scored,
     exit_game,
     get_ball_default_pos,
@@ -45,10 +44,10 @@ def show_title_screen():
         FPS_CLOCK.tick(15)
 
 
-def show_game_over_screen(player):
+def show_game_over_screen():
     game_over_screen = ModalScreen(
         surf=DISPLAY_SURF,
-        title_text='Player {} wins!'.format(player),
+        title_text='Game Over',
         subtitle_text='Press the SPACE bar to play again.'
     )
 
@@ -106,23 +105,16 @@ def main():
         velocity=[settings.DEFAULT_SPEED, settings.DEFAULT_SPEED]
     )
 
-    scores = {
-        settings.PLAYER_ONE: 0,
-        settings.PLAYER_TWO: 0
-    }
-
-    scoreboard = Scoreboard(
-        surf=DISPLAY_SURF,
-        scores=scores
-    )
+    clock = Clock(surf=DISPLAY_SURF)
+    clock.start()
 
     # Stack used to maintain render order
     game_objects = [
         arena,
-        scoreboard,
         player_1,
         player_2,
-        ball
+        ball,
+        clock,
     ]
 
     # Main loop
@@ -145,11 +137,10 @@ def main():
 
         scoring_player = check_point_scored(ball)
         if scoring_player:
-            scoreboard.scores[scoring_player] += 1
-            show_point_scored_message(scoring_player)
-
-            if check_for_winner(scoring_player, scores):
-                show_game_over_screen(scoring_player)
+            clock.stop()
+            show_game_over_screen()
+            clock.reset()
+            clock.start()
 
             ball.reposition(get_ball_default_pos())
 

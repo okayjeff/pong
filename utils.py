@@ -15,12 +15,6 @@ def pygame_init():
     return screen, clock
 
 
-def check_for_winner(player, scores):
-    player_pts = scores[player]
-    if player_pts >= settings.WINNING_SCORE:
-        return player
-
-
 def check_point_scored(ball_rect):
     if ball_rect.left <= settings.LEFT_EDGE:
         return settings.PLAYER_TWO
