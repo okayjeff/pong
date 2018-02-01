@@ -119,8 +119,7 @@ def main():
         game_over = check_point_scored(ball)
         if game_over:
             clock.stop()
-            now = pygame.time.get_ticks()
-            elapsed = clock.get_elapsed_seconds(now)
+            elapsed = clock.get_elapsed_seconds()
             show_game_over_screen(elapsed)
             clock.reset()
             clock.start()
