@@ -16,7 +16,8 @@ from pong.utils import (
     handle_ball_movement,
     handle_player_movement,
     render_game_objects,
-    save_records_to_file
+    save_records_to_file,
+    format_time
 )
 
 
@@ -49,7 +50,7 @@ def show_game_over_screen(seconds):
     save_records_to_file(seconds)
     game_over_screen = ModalScreen(
         surf=DISPLAY_SURF,
-        title_text='Game Over',
+        title_text=format_time(seconds),
         subtitle_text='Press the SPACE bar to play again.'
     )
 
@@ -140,6 +141,7 @@ def main():
             clock.reset()
             clock.start()
 
+            ball.reset_velocity()
             ball.reposition(get_ball_default_pos())
 
         handle_ball_movement(ball, player_1, player_2)

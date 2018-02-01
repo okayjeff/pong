@@ -26,3 +26,6 @@ class Ball(PongObject):
 
     def hits_bottom_edge(self):
         return self.bottom >= settings.BOTTOM_EDGE
+
+    def reset_velocity(self):
+        self.velocity = [settings.DEFAULT_SPEED, settings.DEFAULT_SPEED]
