@@ -86,3 +86,25 @@ def handle_player_movement(player, ball_rect, ball_velocity):
 def render_game_objects(objs):
     for obj in objs:
         obj.render()
+
+
+def get_records(fname=settings.RECORDS_FILENAME):
+    """
+    Open records file and return list of records.
+    """
+    pass
+
+
+def save_record_to_file(seconds, fname=settings.RECORDS_FILENAME):
+    """
+    Add given time in seconds to the records file.
+    """
+    pass
+
+
+def recent_time_is_record(seconds):
+    """
+    Determine if the given time in seconds is in the top 5
+    saved on file.
+    """
+    pass

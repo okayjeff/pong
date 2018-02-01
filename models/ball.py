@@ -26,4 +26,3 @@ class Ball(PongObject):
 
     def hits_bottom_edge(self):
         return self.bottom >= settings.BOTTOM_EDGE
-
