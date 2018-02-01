@@ -71,19 +71,19 @@ def show_game_over_screen(player):
 def show_point_scored_message(player):
     announcement = Announcement(DISPLAY_SURF, 'Player {} scores!'.format(player))
     show = True
+    start = pygame.time.get_ticks()
     while show:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
 
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_SPACE:
-            #         show = False
+        now = pygame.time.get_ticks()
+        if now-start > 2000:
+            show = False
 
         announcement.render()
         pygame.display.update()
-        show = False
-    FPS_CLOCK.tick(.5)
+        FPS_CLOCK.tick(15)
 
 
 def main():
