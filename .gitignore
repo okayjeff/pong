@@ -1,3 +1,9 @@
 __pycache__
+.DS_STORE
 *.pyc
 records.txt
+
+# Bundle
+*.spec
+dist/
+build/
