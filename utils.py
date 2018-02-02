@@ -93,8 +93,12 @@ def get_records(fname=settings.RECORDS_FILENAME):
     """
     Open records file and return list of records.
     """
-    with open(fname, 'r+') as f:
-        records = [int(r) for r in f.readlines()]
+    try:
+        with open(fname, 'r+') as f:
+            records = [int(r) for r in f.readlines()]
+    except FileNotFoundError:
+        with open(fname, 'w+') as f:
+            records = []
     return records
 
 
