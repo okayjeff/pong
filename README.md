@@ -12,7 +12,7 @@ slightly.
 
 All the while, a clock at the top of the screen is keeping
 track of how long you're able to keep the ball in play. Your 
-top five best records will be kept in a file called called
+top five best times (in seconds) will be kept in a file called called
 ```records.txt``` in the game's root directory. In a later version,
 I'll add these records to the Game Over screen.
 
