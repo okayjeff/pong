@@ -1,4 +1,4 @@
-#PyPong
+# PyPong
 *PyPong* is a twist on the classic *Pong*. While it might 
 look and feel familiar, the objective and mechanics are different.
 
