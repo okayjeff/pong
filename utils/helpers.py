@@ -90,7 +90,7 @@ def handle_ball_movement(ball, player_1, player_2):
 
 def handle_player_movement(player, ball):
     """
-    Automate player movement.
+    Automate cpu player movement.
     """
     step = abs(ball.velocity[0])
     mid_arena = settings.WINDOW_HEIGHT//2
