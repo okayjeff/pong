@@ -21,6 +21,15 @@ def pygame_init():
     return screen, clock
 
 
+def delay(seconds):
+    pygame.time.delay(seconds*1000)
+
+
+def exit_game():
+    pygame.quit()
+    sys.exit()
+
+
 def check_point_scored(ball_rect):
     """
     Checks if a point was scored by either player.
@@ -29,15 +38,6 @@ def check_point_scored(ball_rect):
         return settings.PLAYER_TWO
     elif ball_rect.right >= settings.RIGHT_EDGE:
         return settings.PLAYER_ONE
-
-
-def delay(seconds):
-    pygame.time.delay(seconds*1000)
-
-
-def exit_game():
-    pygame.quit()
-    sys.exit()
 
 
 def get_ball_default_pos():

@@ -67,6 +67,56 @@ class ModalScreen(PongObject):
             self.get_subtitle_rect()
         )
 
+
+class GameOverScreen(ModalScreen):
+
+    def get_title_rect(self):
+        rect = self.title_surf.get_rect()
+        rect.center = settings.DEAD_CENTER
+        rect.centerx = settings.DEAD_CENTER[0]
+        rect.centery = settings.DEAD_CENTER[1] - (settings.WINDOW_HEIGHT//3)
+        print(rect)
+        return rect
+
+    def render(self):
+        super(GameOverScreen, self).render()
+        if self.records:
+            records_surf = self.get_records_surface()
+            records_surf_rect = records_surf.get_rect()
+            records_surf_rect.y = settings.BOTTOM_EDGE-400
+            self.surf.blit(records_surf, records_surf_rect)
+
+    def get_records_surface(self):
+        surf = pygame.Surface((settings.WINDOW_WIDTH, 200))
+        subtitle_rect = self.get_subtitle_rect()
+        height = 0
+        title_font = pygame.font.SysFont(
+            self.font,
+            settings.DEFAULT_FONT_SIZE,
+            bold=True
+        )
+        title_surf = title_font.render(
+            'High Scores',
+            settings.ANTIALIAS,
+            settings.WHITE
+        )
+        title_rect = title_surf.get_rect()
+        title_rect.center = settings.DEAD_CENTER
+        surf.blit(title_surf, settings.DEAD_CENTER)
+        # for record in self.records:
+        #     font = pygame.font.SysFont(
+        #         self.font,
+        #         settings.SUBTITLE_FONT_SIZE
+        #     )
+        #     font_surf = font.render(str(record), settings.ANTIALIAS, settings.WHITE)
+        #     font_rect = font_surf.get_rect()
+        #     font_rect.centerx, font_rect.y = subtitle_rect.centerx, subtitle_rect.centery+height
+        #     print(font_rect)
+        #     surf.blit(font_surf, font_rect)
+        #     height += 20
+        return surf
+
+
 def show_title_screen(screen, clock):
     title_screen = ModalScreen(
         surf=screen,
@@ -91,7 +141,7 @@ def show_title_screen(screen, clock):
 
 def show_game_over_screen(screen, clock, seconds):
     save_records_to_file(seconds)
-    game_over_screen = ModalScreen(
+    game_over_screen = GameOverScreen(
         surf=screen,
         title_text=format_time(seconds),
         subtitle_text='Press the SPACE bar to play again.',
