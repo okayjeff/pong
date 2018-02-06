@@ -74,20 +74,16 @@ class GameOverScreen(ModalScreen):
         rect = self.title_surf.get_rect()
         rect.center = settings.DEAD_CENTER
         rect.centerx = settings.DEAD_CENTER[0]
-        rect.centery = settings.DEAD_CENTER[1] - (settings.WINDOW_HEIGHT//3)
+        rect.centery = settings.DEAD_CENTER[1] - (settings.WINDOW_HEIGHT//4)
         return rect
 
     def render(self):
         super(GameOverScreen, self).render()
-        surf = self.get_record_surf()
-        surf_rect = surf.get_rect()
-        surf_rect.center = settings.DEAD_CENTER
-        self.surf.blit(surf, surf_rect)
-        # if self.records:
-        #     records_surf = self.get_records_surface()
-        #     records_surf_rect = records_surf.get_rect()
-        #     records_surf_rect.y = settings.BOTTOM_EDGE-400
-        #     self.surf.blit(records_surf, records_surf_rect)
+        records_surf = self.get_record_surf()
+        records_surf_rect = records_surf.get_rect()
+        records_surf_rect.centerx = settings.DEAD_CENTER[0]
+        records_surf_rect.centery = settings.DEAD_CENTER[1] + 50
+        self.surf.blit(records_surf, records_surf_rect)
 
     def get_record_surf(self):
         surf = pygame.Surface((300, 200))
@@ -105,36 +101,20 @@ class GameOverScreen(ModalScreen):
         font_rect = font_surf.get_rect()
         font_rect.centerx = surf.get_width()//2
         surf.blit(font_surf, font_rect)
-        return surf
 
-    def get_records_surface(self):
-        surf = pygame.Surface((settings.WINDOW_WIDTH, 200))
-        subtitle_rect = self.get_subtitle_rect()
-        height = 0
-        title_font = pygame.font.SysFont(
-            self.font,
-            settings.DEFAULT_FONT_SIZE,
-            bold=True
-        )
-        title_surf = title_font.render(
-            'High Scores',
-            settings.ANTIALIAS,
-            settings.WHITE
-        )
-        title_rect = title_surf.get_rect()
-        title_rect.center = settings.DEAD_CENTER
-        surf.blit(title_surf, settings.DEAD_CENTER)
-        # for record in self.records:
-        #     font = pygame.font.SysFont(
-        #         self.font,
-        #         settings.SUBTITLE_FONT_SIZE
-        #     )
-        #     font_surf = font.render(str(record), settings.ANTIALIAS, settings.WHITE)
-        #     font_rect = font_surf.get_rect()
-        #     font_rect.centerx, font_rect.y = subtitle_rect.centerx, subtitle_rect.centery+height
-        #     print(font_rect)
-        #     surf.blit(font_surf, font_rect)
-        #     height += 20
+        offset = 40
+        for record in self.records:
+            f = pygame.font.SysFont(
+                self.font,
+                settings.DEFAULT_FONT_SIZE+4,
+            )
+            f_surf = f.render(str(record), settings.ANTIALIAS, settings.WHITE)
+            f_rect = f_surf.get_rect()
+            f_rect.centerx = surf.get_width()//2
+            f_rect.centery = offset
+            surf.blit(f_surf, f_rect)
+            offset += 25
+
         return surf
 
 
