@@ -88,7 +88,7 @@ def handle_ball_movement(ball, player_1, player_2):
     ball.move(ball.velocity)
 
 
-def handle_player_movement(player, ball, ball_velocity):
+def handle_player_movement(player, ball):
     """
     Automate player movement.
     """

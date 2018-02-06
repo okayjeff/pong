@@ -78,7 +78,7 @@ def main():
             ball.reposition(get_ball_default_pos())
 
         handle_ball_movement(ball, player_1, player_2)
-        handle_player_movement(player_2, ball, ball.velocity)
+        handle_player_movement(player_2, ball)
 
         # Rendering
         render_game_objects(game_objects)
