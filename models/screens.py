@@ -2,12 +2,8 @@ import pygame
 
 from pong import settings
 from pong.models.base import PongObject
-from pong.utils import (
-    exit_game,
-    format_time,
-    get_formatted_records,
-    save_records_to_file
-)
+from pong.utils.helpers import exit_game, format_time
+from pong.utils.sys import get_formatted_records, save_records_to_file
 
 
 class ModalScreen(PongObject):
@@ -70,7 +66,6 @@ class ModalScreen(PongObject):
             self.subtitle_surf,
             self.get_subtitle_rect()
         )
-
 
 def show_title_screen(screen, clock):
     title_screen = ModalScreen(

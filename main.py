@@ -5,8 +5,8 @@ from pong.models.arena import Arena
 from pong.models.ball import Ball
 from pong.models.clock import Clock
 from pong.models.player import Player
-from pong.models.screens import show_title_screen, show_game_over_screen
-from pong.utils import (
+from pong.models.screens import show_game_over_screen, show_title_screen
+from pong.utils.helpers import (
     pygame_init,
     check_point_scored,
     exit_game,
