@@ -98,7 +98,7 @@ def handle_player_movement(player, ball, ball_velocity):
 
     if ball.is_moving_left():
         # If player distance from mid arena is less than step, just move player
-        # to mid arena to avoid thrashing caused when moving position by
+        # to mid arena to avoid stuttering caused when moving position by
         # <step> pixels causes player to move too far up/down.
         if distance_from_mid_arena < step:
             player.centery = mid_arena
