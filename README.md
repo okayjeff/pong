@@ -16,5 +16,5 @@ top five best times (in seconds) will be kept in a file called called
 ```records.txt``` in the game's root directory. In a later version,
 I'll add these records to the Game Over screen.
 
-My personal record is 35 seconds. Can you beat it?
+My personal record is 38 seconds. Can you beat it?
  
