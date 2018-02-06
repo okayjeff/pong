@@ -53,19 +53,70 @@ class ModalScreen(PongObject):
         rect.center = pos
         return rect
 
-    def fill_background(self):
-        self.surf.fill(settings.BLACK)
+    def fill_background(self, color):
+        self.surf.fill(color)
+
+    def render_title(self):
+        return self.surf.blit(self.title_surf, self.get_title_rect())
+
+    def render_subtitle(self):
+        return self.surf.blit(self.subtitle_surf, self.get_subtitle_rect())
 
     def render(self):
-        self.fill_background()
-        self.surf.blit(
-            self.title_surf,
-            self.get_title_rect()
+        self.fill_background(settings.BLACK)
+        self.render_title()
+        self.render_subtitle()
+
+
+class GameOverScreen(ModalScreen):
+
+    def get_title_rect(self):
+        rect = self.title_surf.get_rect()
+        rect.center = settings.DEAD_CENTER
+        rect.centerx = settings.DEAD_CENTER[0]
+        rect.centery = settings.DEAD_CENTER[1] - (settings.WINDOW_HEIGHT//4)
+        return rect
+
+    def render(self):
+        super(GameOverScreen, self).render()
+        records_surf = self.get_record_surf()
+        records_surf_rect = records_surf.get_rect()
+        records_surf_rect.centerx = settings.DEAD_CENTER[0]
+        records_surf_rect.centery = settings.DEAD_CENTER[1] + 50
+        self.surf.blit(records_surf, records_surf_rect)
+
+    def get_record_surf(self):
+        surf = pygame.Surface((300, 200))
+        surf.fill(settings.BLACK)
+        font = pygame.font.SysFont(
+            self.font,
+            settings.DEFAULT_FONT_SIZE+6,
+            bold=True
         )
-        self.surf.blit(
-            self.subtitle_surf,
-            self.get_subtitle_rect()
+        font_surf = font.render(
+            'High Scores',
+            settings.ANTIALIAS,
+            settings.WHITE
         )
+        font_rect = font_surf.get_rect()
+        font_rect.centerx = surf.get_width()//2
+        surf.blit(font_surf, font_rect)
+
+        offset = 40
+        for record in self.records:
+            f = pygame.font.SysFont(
+                self.font,
+                settings.DEFAULT_FONT_SIZE+4,
+            )
+            f_surf = f.render(str(record), settings.ANTIALIAS, settings.WHITE)
+            f_rect = f_surf.get_rect()
+            f_rect.centerx = surf.get_width()//2
+            f_rect.centery = offset
+            surf.blit(f_surf, f_rect)
+            offset += 25
+
+        return surf
+
 
 def show_title_screen(screen, clock):
     title_screen = ModalScreen(
@@ -91,7 +142,7 @@ def show_title_screen(screen, clock):
 
 def show_game_over_screen(screen, clock, seconds):
     save_records_to_file(seconds)
-    game_over_screen = ModalScreen(
+    game_over_screen = GameOverScreen(
         surf=screen,
         title_text=format_time(seconds),
         subtitle_text='Press the SPACE bar to play again.',
