@@ -29,3 +29,9 @@ class Ball(PongObject):
 
     def reset_velocity(self):
         self.velocity = [settings.DEFAULT_SPEED, settings.DEFAULT_SPEED]
+
+    def is_moving_left(self):
+        return self.velocity[0] < 0
+
+    def is_moving_right(self):
+        return self.velocity[0] > 0
