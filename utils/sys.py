@@ -43,6 +43,9 @@ def recent_time_is_record(seconds, records):
     """
     if len(records) < 1:
         return True, 0
+    if len(records) < 5:
+        return True, 0
+
     for idx, record in enumerate(records):
         if int(seconds) > int(record):
             return True, idx
@@ -54,6 +57,7 @@ def update_records(idx, seconds, records):
     Insert time in seconds at a given index in a list of records.
     """
     records.insert(idx, seconds)
+    records.sort(reverse=True)
     if len(records) > 5:
         records.pop()
     return records
