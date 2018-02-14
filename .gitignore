@@ -7,3 +7,4 @@ records.txt
 *.spec
 dist/
 build/
+.idea/
