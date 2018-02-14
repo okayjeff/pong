@@ -41,7 +41,7 @@ def main():
     ball = Ball(
         surf=DISPLAY_SURF,
         pos=get_ball_default_pos(),
-        velocity=[difficulty, difficulty]
+        speed=settings.EASY
     )
 
     clock = Clock(surf=DISPLAY_SURF)

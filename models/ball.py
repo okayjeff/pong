@@ -6,10 +6,11 @@ from models.base import PongObject
 
 class Ball(PongObject):
 
-    def __init__(self, surf, pos, velocity, color=None):
+    def __init__(self, surf, pos, speed, color=None):
         self.surf = surf
         self.pos = pos
-        self.velocity = velocity
+        self.speed = speed
+        self.velocity = [self.speed, self.speed]
         self.color = color or settings.BALL_COLOR
         super(Ball, self).__init__()
 
