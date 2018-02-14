@@ -36,6 +36,12 @@ class SoundController:
         sound.play()
 
     @classmethod
+    def play_new_game(cls):
+        fname = os.path.join(BASE_PATH, cls.START_GAME)
+        sound = cls._load_sound_file(fname)
+        sound.play()
+
+    @classmethod
     def play_thud(cls):
         fname = os.path.join(BASE_PATH, cls.THUD)
         sound = cls._load_sound_file(fname)

@@ -69,6 +69,7 @@ def main():
         # Logic
         game_over = check_point_scored(ball)
         if game_over:
+            SoundController.play_game_over()
             clock.stop()
             elapsed = clock.get_elapsed_seconds()
             show_game_over_screen(DISPLAY_SURF, FPS_CLOCK, elapsed)

@@ -2,6 +2,7 @@ import pygame
 
 from pong import settings
 from pong.models.base import PongObject
+from pong.models.sounds import SoundController
 from pong.utils.helpers import exit_game, format_time
 from pong.utils.sys import get_formatted_records, save_records_to_file
 
@@ -133,6 +134,7 @@ def show_title_screen(screen, clock):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    SoundController.play_new_game()
                     intro = False
 
         title_screen.render()
@@ -157,6 +159,7 @@ def show_game_over_screen(screen, clock, seconds):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    SoundController.play_new_game()
                     game_over = False
 
         game_over_screen.render()
