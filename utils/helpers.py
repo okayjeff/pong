@@ -28,7 +28,7 @@ def delay(seconds):
 
 def exit_game():
     pygame.quit()
-    sys.exit()
+    records.exit()
 
 
 def check_point_scored(ball_rect):

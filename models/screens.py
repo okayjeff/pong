@@ -4,7 +4,7 @@ import settings
 from models.base import PongObject
 from models.sounds import SoundController
 from utils.helpers import exit_game, format_time
-from utils.sys import get_formatted_records, save_records_to_file
+from utils.records import get_formatted_records, save_records_to_file
 
 
 class GameIntroScreen(PongObject):
