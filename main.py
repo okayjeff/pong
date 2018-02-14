@@ -6,6 +6,7 @@ from pong.models.ball import Ball
 from pong.models.clock import Clock
 from pong.models.player import Player
 from pong.models.screens import show_game_over_screen, show_title_screen
+from pong.models.sounds import SoundController
 from pong.utils.helpers import (
     pygame_init,
     check_point_scored,
@@ -87,5 +88,6 @@ def main():
 
 
 if __name__ == '__main__':
+    SoundController.play_intro()
     show_title_screen(DISPLAY_SURF, FPS_CLOCK)
     main()
