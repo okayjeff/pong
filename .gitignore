@@ -8,3 +8,4 @@ records.txt
 dist/
 build/
 .idea/
+venv
