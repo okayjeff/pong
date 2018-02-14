@@ -7,7 +7,7 @@ from utils.helpers import exit_game, format_time
 from utils.sys import get_formatted_records, save_records_to_file
 
 
-class ModalScreen(PongObject):
+class GameIntroScreen(PongObject):
 
     def __init__(self, surf, title_text, subtitle_text, records=None, font=None, color=None):
         self.surf = surf
@@ -35,7 +35,7 @@ class ModalScreen(PongObject):
             settings.ANTIALIAS,
             self.color
         )
-        super(ModalScreen, self).__init__()
+        super(GameIntroScreen, self).__init__()
 
     def get_rect(self):
         pass
@@ -69,7 +69,8 @@ class ModalScreen(PongObject):
         self.render_subtitle()
 
 
-class GameOverScreen(ModalScreen):
+# TODO: Inheriting from GameIntroScreen is messy
+class GameOverScreen(GameIntroScreen):
 
     def get_title_rect(self):
         rect = self.title_surf.get_rect()
@@ -120,7 +121,7 @@ class GameOverScreen(ModalScreen):
 
 
 def show_title_screen(screen, clock):
-    title_screen = ModalScreen(
+    title_screen = GameIntroScreen(
         surf=screen,
         title_text=settings.GAME_NAME,
         subtitle_text='Press the SPACE bar to start playing.'
