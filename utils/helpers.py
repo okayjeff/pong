@@ -4,6 +4,7 @@ import time
 import pygame
 
 from pong import settings
+from pong.models.sounds import SoundController
 
 
 def pygame_init():
@@ -69,9 +70,11 @@ def handle_ball_movement(ball, player_1, player_2):
     time player 1 successfully volleys it.
     """
     if ball.hits_top_edge() or ball.hits_bottom_edge():
+        SoundController.play_thud()
         ball.velocity[1] = -ball.velocity[1]
 
     if player_1.hits_ball(ball) or player_2.hits_ball(ball):
+        SoundController.play_racquet()
         ball.velocity[0] = -ball.velocity[0]
 
         # Every time player 1 hits ball increase speed
