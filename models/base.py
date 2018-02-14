@@ -1,6 +1,3 @@
-from pong import settings
-
-
 class PongObject(object):
 
     def __init__(self):

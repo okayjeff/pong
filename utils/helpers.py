@@ -3,8 +3,8 @@ import time
 
 import pygame
 
-from pong import settings
-from pong.models.sounds import SoundController
+import settings
+from models.sounds import SoundController
 
 
 def pygame_init():

@@ -2,8 +2,8 @@ import time
 
 import pygame
 
-from pong import settings
-from pong.models.base import PongObject
+import settings
+from models.base import PongObject
 
 
 class Clock(PongObject):

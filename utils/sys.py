@@ -1,5 +1,5 @@
-from pong import settings
-from pong.utils.helpers import format_time
+import settings
+from utils.helpers import format_time
 
 
 def get_records(fname=settings.RECORDS_FILENAME):

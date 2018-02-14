@@ -1,13 +1,13 @@
 import pygame
 
-from pong import settings
-from pong.models.arena import Arena
-from pong.models.ball import Ball
-from pong.models.clock import Clock
-from pong.models.player import Player
-from pong.models.screens import show_game_over_screen, show_title_screen
-from pong.models.sounds import SoundController
-from pong.utils.helpers import (
+import settings
+from models.arena import Arena
+from models.ball import Ball
+from models.clock import Clock
+from models.player import Player
+from models.screens import show_game_over_screen, show_title_screen
+from models.sounds import SoundController
+from utils.helpers import (
     pygame_init,
     check_point_scored,
     exit_game,
