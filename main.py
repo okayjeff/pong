@@ -23,7 +23,6 @@ DISPLAY_SURF, FPS_CLOCK = pygame_init()
 
 
 def main():
-    difficulty = settings.EASY
     arena = Arena(surf=DISPLAY_SURF)
 
     player_1 = Player(
