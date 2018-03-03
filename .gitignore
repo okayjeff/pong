@@ -9,3 +9,7 @@ dist/
 build/
 .idea/
 venv
+
+# Tox
+.pytest_cache/
+.tox/
