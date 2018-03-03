@@ -24,8 +24,7 @@ class Clock(PongObject):
         return self.font_surf.get_rect()
 
     def format_time(self, seconds):
-        fmt = settings.TIME_FORMAT
-        return time.strftime(fmt, time.gmtime(seconds))
+        return time.strftime(settings.TIME_FORMAT, time.gmtime(seconds))
 
     def get_elapsed_seconds(self):
         now = pygame.time.get_ticks()
