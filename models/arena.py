@@ -16,7 +16,7 @@ class Arena(PongObject):
     def get_rect(self):
         return self.surf.get_rect()
 
-    def draw_border(self):
+    def _draw_border(self):
         pygame.draw.rect(
             self.surf,
             self.line_color,
@@ -24,7 +24,7 @@ class Arena(PongObject):
             self.border_weight
         )
 
-    def draw_center_line(self):
+    def _draw_center_line(self):
         pygame.draw.line(
             self.surf,
             self.line_color,
@@ -33,10 +33,10 @@ class Arena(PongObject):
             settings.LINE_THICKNESS//4
         )
 
-    def fill_background(self):
+    def _fill_background(self):
         self.surf.fill(self.bg_color)
 
     def render(self):
-        self.fill_background()
-        self.draw_border()
-        self.draw_center_line()
+        self._fill_background()
+        self._draw_border()
+        self._draw_center_line()
